@@ -33,12 +33,12 @@ def text_of(node):
 
 def get_rss_content(url):
   rss_document = load(url)
+  result = ''
   for item in get_elements_by_tag_name(rss_document, 'item'):
-      result = \
+      result += \
       'title: ' + text_of(first(item, 'title')) + '\n' + \
       'link: ' + text_of(first(item, 'link')) + '\n\n' + \
       'description: ' + text_of(first(item, 'description')) + '\n\n' + \
       'date: ' + text_of(first(item, 'date', DUBLIN_CORE)) + '\n' + \
       'author: ' + text_of(first(item, 'creator', DUBLIN_CORE)) + '\n'
-      print(result)
   return result
