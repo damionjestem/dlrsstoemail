@@ -31,23 +31,18 @@ def home():
     if request.method == "POST":
         url = request.form["rss_url"]
         if (url != ''):
-            entry = rss(url)
-            db.session.add(entry)
-            db.session.commit()
-            flash("Dodano nowy URL")
-            records = session.query(rss).all()
+            if request.form.get('Save') == 'Save':
+                entry = rss(url)
+                db.session.add(entry)
+                db.session.commit()
+                flash("Dodano nowy URL")
+                records = session.query(rss).all()
+            if request.form.get('Preview') == 'Preview':
+                return render_template("index.html", preview = rssreader.get_rss_content(url))
         else:
             flash("Niepoprawny URL")
 
     return render_template("index.html", rss_tab = records)
-
-@app.route('/getPreview')
-def get_preview(methods=["POST","GET"]):
-    if request.method == "GET":
-        rssreader.get_rss_content(session.query(rss).order_by(rss.id.desc()).first())
-        preview = 'preview'
-        print(preview)
-    return render_template("index.html", preview = preview)
 
 if __name__ == "__main__":
     db.create_all()
